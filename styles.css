@@ -22,6 +22,7 @@
   --h1: 2rem;
   --h1-sm: 1.3rem;
   --body-text-md: 1rem;
+  --input-text: 0.875rem;
   --body-text-sm: 0.75rem;
   --caption: 0.75rem;
 
@@ -179,7 +180,7 @@
   flex: 1;
   border: none;
   outline: none;
-  font-size: var(--body-text-sm);
+  font-size: var(--input-text);
 }
 
 .search-btn {
@@ -215,7 +216,7 @@
   width: 100%;
   display: flex;
   flex-flow: row wrap;
-  align-items: center;
+  align-items: flex-start;
   gap: 1.5rem;
 }
 
@@ -360,8 +361,7 @@
     width: 100%;
     display: flex;
     flex-flow: row wrap;
-    align-items: center;
-    justify-content: space-between;
+    align-items: flex-start;
     gap: 1.5rem;
   }
 
