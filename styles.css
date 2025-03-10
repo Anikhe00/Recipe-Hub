@@ -166,6 +166,7 @@
 
 .form {
   width: 70%;
+  height: 3rem;
   display: flex;
   padding: 0.25rem 0.25rem 0.25rem 0.75rem;
   align-items: center;
@@ -196,6 +197,7 @@
   box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
   color: var(--white);
   cursor: pointer;
+  display: none;
 }
 
 .search-btn:hover {

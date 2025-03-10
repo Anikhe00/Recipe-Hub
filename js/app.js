@@ -7,18 +7,16 @@ const form = document.getElementById("form")
 const input = document.getElementById("search-input")
 const recipeSection = document.getElementById("recipe-cards")
 
-// Fetch 12 random meals when the page loads
+// Fetch 18 random meals when the page loads
 document.addEventListener("DOMContentLoaded", function() {
-  for (let x = 0; x < 12; x++){
+  for (let x = 0; x < 18; x++){
     fetchRandomMeal(createRecipeCard)
   }
 })
 
-// Listen for a submit event on the form, collects input data and fetch recipes from the API 
-form.addEventListener("submit", function(event){
-  // Prevent form default setting of emptying the input field on submission
-  event.preventDefault()
-
+// Listen for user input in the search field and fetch recipes from the API 
+input.addEventListener("input", function(event){
+  
   // Collect input data or value
   const searchInput = input.value.trim()
 
@@ -33,5 +31,9 @@ form.addEventListener("submit", function(event){
         recipeSection.innerHTML = "<p>No Recipe Found. Try modifying your search.</>"
       }
     })
+  } else {
+    // If input is cleared, reload random meals
+    clearRecipeSection()
+    fetchRandomMeal(createRecipeCard)
   }
 })
