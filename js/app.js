@@ -34,6 +34,12 @@ input.addEventListener("input", function(event){
   } else {
     // If input is cleared, reload random meals
     clearRecipeSection()
-    fetchRandomMeal(createRecipeCard)
+    loadRandomMeals()
   }
 })
+
+function loadRandomMeals() {
+  for (let x = 0; x < 18; x++){
+    fetchRandomMeal(createRecipeCard)
+  }
+}
