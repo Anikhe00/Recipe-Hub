@@ -6,10 +6,23 @@ import { createRecipeCard, clearRecipeSection } from "./ui.js";
 const input = document.getElementById("search-input")
 const recipeSection = document.getElementById("recipe-cards")
 
-// Fetch 18 random meals when the page loads
+// Fetch random meals when the page loads
 document.addEventListener("DOMContentLoaded", function() {
-  for (let x = 0; x < 18; x++){
-    fetchRandomMeal(createRecipeCard)
+  // Check if we already have stored meals
+  const storedMeals = localStorage.getItem('randomMeals');
+  
+  if (storedMeals) {
+    // If we have stored meals, use them
+    const meals = JSON.parse(storedMeals);
+    clearRecipeSection();
+    meals.forEach(meal => createRecipeCard(meal));
+  } else {
+    // If no stored meals, fetch new ones
+    recipeSection.innerHTML = '<p>Loading recipes...</p>';
+    loadRandomMeals().catch(error => {
+      console.error('Failed to load random meals:', error);
+      recipeSection.innerHTML = '<p>Failed to load recipes. Please try refreshing the page.</p>';
+    });
   }
 })
 
@@ -32,25 +45,64 @@ input.addEventListener("input", function(event){
     if (searchInput !== ""){
       // Clear recipes section to remove the random meals
       clearRecipeSection()
+      // Show loading state
+      recipeSection.innerHTML = '<p>Searching...</p>';
+      
       fetchSearchMeal(searchInput, function(meals){
+        clearRecipeSection();
         if (meals.length > 0){
-        meals.forEach(createRecipeCard)
-        }else {
-        recipeSection.innerHTML = "<p>No Recipe Found. Try modifying your search.</>"
+          meals.forEach(createRecipeCard)
+        } else {
+          recipeSection.innerHTML = "<p>No recipes found. Try modifying your search.</p>"
         }
-     })
+      })
     } else {
-      // If input is cleared, reload random meals
-      clearRecipeSection()
-      loadRandomMeals()
+      // If input is cleared, show stored random meals
+      const storedMeals = localStorage.getItem('randomMeals');
+      clearRecipeSection();
+      if (storedMeals) {
+        const meals = JSON.parse(storedMeals);
+        meals.forEach(meal => createRecipeCard(meal));
+      }
     }
   // Delay API call by 0.7s
   }, 700)
 })
 
-// Fetch and display random meals on clearing input
-function loadRandomMeals() {
-  for (let x = 0; x < 18; x++){
-    fetchRandomMeal(createRecipeCard)
+// Fetch and display random meals sequentially
+async function loadRandomMeals() {
+  const totalMeals = 24;
+  const fetchedMeals = new Set(); // To track unique meals
+  const mealsArray = []; // Array to store all fetched meals
+
+  clearRecipeSection();
+
+  for (let i = 0; i < totalMeals; i++) {
+    try {
+      await new Promise((resolve, reject) => {
+        fetchRandomMeal((meal) => {
+          try {
+            // Only add the meal if we haven't seen it before
+            if (!fetchedMeals.has(meal.idMeal)) {
+              fetchedMeals.add(meal.idMeal);
+              createRecipeCard(meal);
+              mealsArray.push(meal); // Store the meal in our array
+            } else {
+              // If we got a duplicate, try fetching another one
+              i--;
+            }
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
+        });
+      });
+    } catch (error) {
+      console.error('Error loading meal:', error);
+      continue;
+    }
   }
+
+  // Store all fetched meals in localStorage
+  localStorage.setItem('randomMeals', JSON.stringify(mealsArray));
 }

@@ -8,6 +8,7 @@ function createRecipeCard(meal) {
   const youtubeLink = meal.strYoutube
   const mealImage = meal.strMealThumb
   const mealCategory = meal.strCategory
+  const mealId = meal.idMeal
 
   // Create recipe card and assign the data extracted from the API to the each counterparts
 
@@ -54,6 +55,12 @@ function createRecipeCard(meal) {
   let categoryName = document.createElement("p")
   categoryName.classList.add("category-name")
   categoryName.textContent = mealCategory
+
+  // Make the card clickable
+  recipeCard.addEventListener("click", function() {
+    localStorage.setItem("selectedMeal", JSON.stringify(meal))
+    window.location.href = `details.html`
+  })
 
   // Append the content to their various parents
   categoryContainer.append(categoryIcon, categoryName)
