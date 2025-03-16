@@ -18,13 +18,5 @@ function fetchSearchMeal(searchInput, recipeResult){
   .catch()
 }
 
-// Fetch meal details by ID
-function fetchMealById(mealId, details) {
-  fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`)
-  .then(response => response.json())
-  .then(data => details(data.meals[0]))
-  .catch()
-}
-
 // Export both function
-export {fetchRandomMeal, fetchSearchMeal, fetchMealById}
+export {fetchRandomMeal, fetchSearchMeal}
